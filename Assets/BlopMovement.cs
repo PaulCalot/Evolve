@@ -6,7 +6,7 @@ using UnityEngine;
         We can however by playing on the parameters give different behaviors to the blup (more or less exploring etc. - especially by playing on the function NextTheta)
         Another possibility is to link it to the energy that we have remaining and explore until we have less that 70% 
         for example and get some food then (we can save points where we would be getting food).
-    */
+    */  
 public class BlopMovement : MonoBehaviour
 {
     // there is the problem of those who never get close from there food...
