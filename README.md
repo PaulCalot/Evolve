@@ -1,4 +1,4 @@
- # Covid-19-Game
+ # Evolve
 
 Evolution of a population of a given specy called Blop.
 
