@@ -24,12 +24,12 @@ public class Energy : MonoBehaviour
     public float currentEnergy;
 
     float foodEnergy = 100f; // the energy it gives to eat some food
-    float energyProcreationMin = 401f; // for now we say that if it reaches the procreation energy then it creates a new blop.
-    float energyProcreation = 150f; // the energy it takes to make the child
-
+    float energyProcreationMin = 601f; // for now we say that if it reaches the procreation energy then it creates a new blop.
+    float energyProcreation = 400f; // the energy it takes to make the child
+    float timeRequiredToEat = 5.0f;
 
     // energy depletion 
-    float offSetAlive = 1f; // the energy it takes to be alive, even if not moving.
+    float offSetAlive = 0.5f; // the energy it takes to be alive, even if not moving.
     float frictionCoef = 0.1f; // this coef is simply to account for the lose of energy (which is proportionnal to the squared speed of the blop)
     float frictionForce; // that is going to be the frinction that when multiplied by the speed gives the loss in energy
 
@@ -75,9 +75,10 @@ public class Energy : MonoBehaviour
 
                     // certain % of chance to become sick
                     this.GetComponent<Virus>().becomeSick();
-
+                    
                     // and we reset the food.
-                    this.GetComponent<BlopMovement>().resetFood(); // dues to several upgrades done, its a little be complicated but basically 
+                    this.GetComponent<BlopMovement>().resetFood(); // dues to several upgrades done, its a little be complicated but basically
+                    //StartCoroutine(waiter()); // won't affect energy while we wait
                     // it says to blomovement that it can stop chasing for food.
                     // and that the food itself has to wait a certain amount of time to be available again.
 
@@ -100,9 +101,10 @@ public class Energy : MonoBehaviour
             // and we check if we still have enough energy to live.
             if(this.currentEnergy < 0 ){
                 // if not, we make sure he blop wont move anymore (and change its color)
+               // this.GetComponent<BlopMovement>().setIsDead(); // we disable the movement. But the virus remains.
                 this.GetComponent<BlopMovement>().enabled = false; // we disable the movement. But the virus remains.
                 this.GetComponent<CapsuleCollider>().enabled = false; // we disable the collider. But the virus remains.
-                this.GetComponent<Rigidbody>().Sleep(); // We force the blop to stop mouving. But the virus remains.
+                Destroy(this.GetComponent<Rigidbody>());//.Sleep();  // // We force the blop to stop mouving. But the virus remains.
 
                 // we pass the message that it's dead to the 2 scripts : energy. We dont give it to "Virus.cs" since it's not dead from the virus. That what allows us to tell from what the blup died of.
                 this.isDead = true;

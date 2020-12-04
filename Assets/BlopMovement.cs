@@ -11,13 +11,14 @@ public class BlopMovement : MonoBehaviour
 {
     // there is the problem of those who never get close from there food...
     float SightRadius = 10f; // no sight angle yet
-    float SpeedNorm = 60000f;
-    float SpeedLimit = 7f; 
+    float SpeedNorm = 20000f;
+    float SpeedLimit = 3f; 
     float currentOrientation;
     Vector3 nextSpeed;
 
     GameObject food;
     Vector3 foodPosition;
+    public bool isDead = false;
     public bool foodFound = false;
     public bool foodReached = false;
     float DistanceEat = 0.4f;
@@ -49,7 +50,23 @@ public class BlopMovement : MonoBehaviour
         }
     }
     public bool getFood(){
-        return this.food.GetComponent<MeshRenderer>().enabled == true; // return if the food has been disabled since we spotted it (to see if some other animal has eaten it)
+        bool B = false;
+        if(this.food != null){
+            B = this.food.GetComponent<MeshRenderer>().enabled;
+            if(!B){
+                this.food = null;
+                this.foodFound = false;
+            }
+        }
+        else{
+            this.foodFound = false;
+        }
+        return B; 
+    }
+         // return if the food has been disabled since we spotted it (to see if some other animal has eaten it)
+
+    public void setIsDead(){
+        this.isDead=true;
     }
 
 
@@ -63,7 +80,7 @@ public class BlopMovement : MonoBehaviour
    }
      private void FixedUpdate() {
          // !this.GetComponent<Energy>().getIsDead() &&  // should be useless
-       if (!this.foodReached){ // as long as we did not reach the food
+       if (!this.foodReached && !this.isDead ){ // as long as we did not reach the food
 
             this.nextSpeed.y = 0; // we dont want to add any force towards the "y" coordinate. 
             this.GetComponent<Rigidbody>().AddForce(this.SpeedNorm * this.nextSpeed * Time.deltaTime); // we had the force.
@@ -168,6 +185,7 @@ public class BlopMovement : MonoBehaviour
         float x = Random.Range(0f,1f); // gives a number between 0 and 1
         float a = 1f/1000f;
         float newOrientation;
+        float fact = 0.5f;
         if (x<700f*a){ // angle = 0
             newOrientation = 0f;
         }
@@ -193,7 +211,7 @@ public class BlopMovement : MonoBehaviour
             newOrientation = -1f;
         }
         // Random.Range(-Mathf.PI/32f,Mathf.PI/32f)
-        return (Mathf.PI * newOrientation + Random.Range(-Mathf.PI/32f,Mathf.PI/32f));
+        return (fact* (Mathf.PI * newOrientation + Random.Range(-Mathf.PI/32f,Mathf.PI/32f)));
     }
     
 }

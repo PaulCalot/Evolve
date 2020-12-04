@@ -11,6 +11,7 @@ using UnityEngine;
 public class Virus : MonoBehaviour
 {
         // textures :
+        // yellow initial color
     Color deathColor = Color.black;
     Color sickColor = Color.green;
     Color curedColor = Color.red;
@@ -21,8 +22,8 @@ public class Virus : MonoBehaviour
     public bool isDead = false;
 
         // probability of dying, getting sick and cured
-    float probDeath=0.0001f;
-    float probCured=0.0005f;
+    float probDeath=0.002f;
+    float probCured=0.002f;
     float probReproduction = 0.5f;
     float probSick = 0.2f;
     
@@ -49,10 +50,11 @@ public class Virus : MonoBehaviour
 
                 if (x<this.probDeath){ // it dies from the virus
 
+                    
                     // then we make sure the blop wont move anymore.
                     this.GetComponent<BlopMovement>().enabled = false; // we disable the movement. But the virus remains.
                     this.GetComponent<CapsuleCollider>().enabled = false; // we disable the collider. But the virus remains.
-                    this.GetComponent<Rigidbody>().Sleep(); // We force the blop to stop mouving. But the virus remains.
+                    Destroy(this.GetComponent<Rigidbody>());//.Sleep();  // // We force the blop to stop mouving. But the virus remains.
 
                     // we pass the message that it's dead to the 2 scripts : energy and virus
                     this.GetComponent<Energy>().setIsDead();
@@ -62,7 +64,7 @@ public class Virus : MonoBehaviour
                     this.transform.Find("body").GetComponent<MeshRenderer>().material.color = this.deathColor;
 
                     // And we also set the energy of the blop to zero :
-                    this.GetComponent<Energy>().setEnergyToZero(); 
+                  //  this.GetComponent<Energy>().setEnergyToZero(); 
 
                 }
 
@@ -83,7 +85,7 @@ public class Virus : MonoBehaviour
     private void OnTrigerEnter(Collider other) { // OnTrigerEnter is a little bit costly. Se we may want to do it differently, but then there is not many collisions, so it's ok.
         // this function allows for the virus to spread from one individu to another.
         // In  theory, once a blop is dead, the collider is deactivated, and so this function wont be called anymore.
-        if (other.gameObject.tag == "Blop"){
+        if (other.gameObject.tag == "Blop" && !this.isDead){
 
             if (other.gameObject.GetComponent<Virus>().isSick && !this.isCured){ // we make sure that the blop is not already resistant.
 
